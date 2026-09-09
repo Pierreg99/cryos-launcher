@@ -7,9 +7,12 @@ import type { NextConfig } from "next";
  *                        any static host (`npm run build:static`)
  */
 const staticExport = process.env.NEXT_STATIC_EXPORT === "1";
+/** Sub-path hosting (GitHub Pages: /cryos-launcher). Empty = domain root. */
+const basePath = process.env.NEXT_BASE_PATH ?? "";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  ...(basePath ? { basePath } : {}),
   ...(staticExport
     ? { output: "export" as const, images: { unoptimized: true }, trailingSlash: false }
     : {}),

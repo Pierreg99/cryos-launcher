@@ -11,7 +11,7 @@ export function useServiceWorker(): void {
     if (process.env.NODE_ENV !== "production") return;
     if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return;
     if (Capacitor.isNativePlatform()) return; // native shell serves assets locally
-    navigator.serviceWorker.register("/sw.js").catch(() => {
+    navigator.serviceWorker.register("sw.js").catch(() => {
       // offline caching unavailable — non-fatal
     });
   }, []);

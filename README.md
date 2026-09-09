@@ -18,6 +18,9 @@ carries its own accent and hex-mark glyph — same law, different chrome.
 > UI/UX simulation only — no real Android APIs, no native launcher package.
 > For demo, portfolio and interactive-storytelling purposes.
 
+**Live demo:** https://pierreg99.github.io/cryos-launcher/ (GitHub Pages,
+static export — desktop mode needs a window ≥ 900 px)
+
 ## Run it
 
 ```bash
@@ -170,6 +173,18 @@ network calls at runtime.
 PWA: web manifest + installable metadata + SVG icon + offline service
 worker (`public/sw.js`, production-only registration — `next dev` never
 caches). Bump `CACHE` in `sw.js` to ship a new offline generation.
+
+## Deploy (GitHub Pages)
+
+```bash
+npm run build:pages   # static export with basePath /cryos-launcher + .nojekyll
+```
+
+then push `out/` to the `gh-pages` branch (orphan branch, force-push).
+The service worker derives its cache base from the registration scope, so
+the same `sw.js` works at a domain root and under the Pages sub-path.
+`npm run build` (server mode) and `npm run build:app` (Capacitor, no
+basePath) stay independent. Roadmap: [EXPANSION.md](EXPANSION.md).
 
 ## Native app (Capacitor)
 

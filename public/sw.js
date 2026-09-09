@@ -11,7 +11,10 @@
  */
 
 const CACHE = "cryos-cache-v1";
-const PRECACHE = ["/", "/icon.svg", "/manifest.webmanifest"];
+// Works at a domain root and under a sub-path (GitHub Pages /cryos-launcher/):
+// the registration scope tells us where the app shell lives.
+const BASE = new URL(self.registration.scope).pathname.replace(/\/$/, "");
+const PRECACHE = [BASE + "/", BASE + "/icon.svg", BASE + "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -52,7 +55,7 @@ self.addEventListener("fetch", (event) => {
         .catch(() =>
           caches
             .match(req)
-            .then((hit) => hit || caches.match("/"))
+            .then((hit) => hit || caches.match(BASE + "/"))
             .then(
               (fallback) =>
                 fallback ||
@@ -67,7 +70,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   // immutable hashed build assets — cache-first
-  if (url.pathname.startsWith("/_next/static/")) {
+  if (url.pathname.startsWith(BASE + "/_next/static/")) {
     event.respondWith(
       caches.match(req).then(
         (hit) =>

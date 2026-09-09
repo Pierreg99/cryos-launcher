@@ -2,7 +2,7 @@
   "name": "crydroid-launcher",
   "version": "0.1.0",
   "private": true,
-  "description": "CryDroid Launcher OS — fully virtualized cryOS phone launcher simulation. One law, many ices.",
+  "description": "CryDroid Launcher OS \u2014 fully virtualized cryOS phone launcher simulation. One law, many ices.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,7 +11,8 @@
     "smoke": "tsx scripts/smoke-store.ts",
     "build:static": "cross-env NEXT_STATIC_EXPORT=1 next build",
     "build:app": "npm run build:static && cap sync android",
-    "open:android": "cap open android"
+    "open:android": "cap open android",
+    "build:pages": "cross-env NEXT_STATIC_EXPORT=1 NEXT_BASE_PATH=/cryos-launcher next build && node -e \"require('fs').writeFileSync('out/.nojekyll','')\""
   },
   "dependencies": {
     "@capacitor/app": "^7.1.2",
