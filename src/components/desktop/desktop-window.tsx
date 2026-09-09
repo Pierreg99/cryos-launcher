@@ -6,7 +6,14 @@ import { Copy, Minus, Square, X } from "lucide-react";
 import { useDict } from "@/i18n";
 import { useShell, type WinState } from "@/store/shell";
 import { APPS } from "@/lib/apps";
-import { MIN_H, MIN_W, TASKBAR_H } from "@/lib/desktop";
+import {
+  MIN_H,
+  MIN_W,
+  TASKBAR_H,
+  snapGeometry,
+  snapZoneFor,
+  type SnapZone,
+} from "@/lib/desktop";
 import { clamp, cn } from "@/lib/utils";
 import { useViewport } from "@/components/viewport-context";
 import { AppContent } from "@/components/apps/app-content";
@@ -19,6 +26,7 @@ type DragState = {
   x0: number;
   y0: number;
   g: { x: number; y: number; w: number; h: number };
+  snap: SnapZone | null;
 };
 
 const HANDLES: { dir: Dir; cls: string }[] = [
@@ -45,6 +53,7 @@ export function DesktopWindow({ win, layer }: { win: WinState; layer: number }) 
   const winMinimize = useShell((s) => s.winMinimize);
   const winToggleMax = useShell((s) => s.winToggleMax);
   const winClose = useShell((s) => s.winClose);
+  const setSnapPreview = useShell((s) => s.setSnapPreview);
   const viewportRef = useViewport();
 
   const app = APPS[win.appId];
@@ -56,16 +65,28 @@ export function DesktopWindow({ win, layer }: { win: WinState; layer: number }) 
     mode: "move" | "resize",
     dir: Dir | null,
   ) => {
-    if (win.max || e.button === 2) return;
+    if (e.button === 2) return;
     if (mode === "move" && (e.target as Element).closest("button")) return;
     e.stopPropagation();
-    drag.current = {
-      mode,
-      dir,
-      x0: e.clientX,
-      y0: e.clientY,
-      g: { x: win.x, y: win.y, w: win.w, h: win.h },
-    };
+
+    let g = { x: win.x, y: win.y, w: win.w, h: win.h };
+    if (win.max) {
+      if (mode !== "move") return; // maximized windows do not resize by edge
+      // drag-out of maximize: restore under the pointer, OS-style
+      const r = viewportRef.current?.getBoundingClientRect();
+      if (r) {
+        g = {
+          x: clamp(e.clientX - r.left - win.w / 2, 0, Math.max(0, r.width - win.w)),
+          y: clamp(e.clientY - r.top - 18, 0, Math.max(0, r.height - TASKBAR_H - 40)),
+          w: win.w,
+          h: win.h,
+        };
+        winToggleMax(win.id);
+        winResize(win.id, { x: g.x, y: g.y });
+      }
+    }
+
+    drag.current = { mode, dir, x0: e.clientX, y0: e.clientY, g, snap: null };
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
     } catch {
@@ -82,12 +103,25 @@ export function DesktopWindow({ win, layer }: { win: WinState; layer: number }) 
 
     if (st.mode === "move") {
       const r = viewportRef.current?.getBoundingClientRect();
-      const vw = r?.width ?? Number.MAX_SAFE_INTEGER;
-      const vh = r?.height ?? Number.MAX_SAFE_INTEGER;
+      if (!r) return;
+      const px = e.clientX - r.left;
+      const py = e.clientY - r.top;
+      const zone = snapZoneFor(px, py, r.width, r.height);
+      if (zone !== null) {
+        if (st.snap !== zone) {
+          st.snap = zone;
+          setSnapPreview(snapGeometry(zone, r.width, r.height));
+        }
+        return; // window freezes while the preview shows the snap target
+      }
+      if (st.snap !== null) {
+        st.snap = null;
+        setSnapPreview(null);
+      }
       winMove(
         win.id,
-        clamp(st.g.x + dx, -(st.g.w - 120), Math.max(8, vw - 120)),
-        clamp(st.g.y + dy, 0, Math.max(8, vh - TASKBAR_H - 40)),
+        clamp(st.g.x + dx, -(st.g.w - 120), Math.max(8, r.width - 120)),
+        clamp(st.g.y + dy, 0, Math.max(8, r.height - TASKBAR_H - 40)),
       );
       return;
     }
@@ -108,7 +142,14 @@ export function DesktopWindow({ win, layer }: { win: WinState; layer: number }) 
   };
 
   const onUp = () => {
+    const st = drag.current;
     drag.current = null;
+    if (!st) return;
+    if (st.snap !== null) {
+      const r = viewportRef.current?.getBoundingClientRect();
+      if (r) winResize(win.id, snapGeometry(st.snap, r.width, r.height));
+      setSnapPreview(null);
+    }
   };
 
   return (

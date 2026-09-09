@@ -66,8 +66,18 @@ fills the viewport edge-to-edge. Mouse and touch both work everywhere.
 | Click a window / taskbar click (unfocused) | Focus (raise z-order) |
 | Close button | Close window |
 | Click empty desktop | Minimize all windows (per the session contract) |
-| Escape | Close app menu |
-| Tray | Dark-mode quick toggle, radio + battery mocks, clock (opens Clock) |
+| Drag window to screen edge / corner | Snap: left/right half, top = full usable area, corners = quadrants (live preview) |
+| Drag a maximized window by its title | Restores under the pointer, OS-style |
+| Escape | Close app menu / CryCenter |
+| Tray | CryCenter button, dark-mode quick toggle, radio + battery mocks, clock (opens Clock) |
+
+### CryCenter (desktop)
+
+Opened from the tray (distro-mark button, unread dot): control center
+(WLAN, Bluetooth, dark mode, airplane, parallax, brightness), **ice
+switcher** ("Switch ice from CryCenter or Settings"), lock session, and —
+split below the controls — the notification list. The phone keeps its
+notification shade; both share the same controls and notification state.
 
 ## Modules (per agent brief)
 
@@ -101,6 +111,13 @@ fills the viewport edge-to-edge. Mouse and touch both work everywhere.
    (drag / 8-way resize / min / max-restore / close / click-to-focus /
    single instance, session-only state), taskbar-dock with running
    indicators and tray, searchable start menu with lock.
+8. **Phase 3 — snap, CryCenter, offline** (approved extension): window
+   snapping/tiling (edge halves, corner quadrants, top full-area, live
+   preview, drag-out of maximize), desktop **CryCenter** (control center
+   split from notifications + ice switcher + lock, shared controls with
+   the phone shade), and the **offline service worker** (network-first
+   navigations, cache-first hashed assets, SWR elsewhere; registered in
+   production builds only) completing the installable PWA.
 
 Mock apps: CryBel, Family, Manifest, DNA (frozen doctrine), Device (Super
 Device bus), Files (CryIndex walker), CryPaper (persisted notes), CryoLan
@@ -129,12 +146,14 @@ src/
                   apps/ (app-content, settings, clock, terminal, notes, files,
                          device, doctrine),
                   desktop/ (desktop-os, desktop-window, desktop-taskbar,
-                            desktop-app-menu, desktop-icons,
-                            desktop-clock-widget)
+                            desktop-app-menu, desktop-crycenter,
+                            desktop-icons, desktop-clock-widget),
+                  qs-controls (shared quick settings + notifications)
   hooks/          use-now, use-hydrated, use-theme, use-media-query,
                   use-parallax, use-gestures, use-slot-drag,
-                  use-desktop-layout
-  lib/            apps, live, wallpapers, doctrine, crybel, desktop, utils
+                  use-desktop-layout, use-service-worker
+  lib/            apps, live, wallpapers, doctrine, crybel, desktop
+                  (incl. snap geometry), utils
   store/          shell.ts (stage machine + persisted launcher state)
   i18n.ts         EN/DE dictionary (useDict)
 scripts/          smoke-store.ts (headless logic tests)
@@ -148,8 +167,9 @@ Exactly three UI libraries (Tailwind, Framer Motion, Lucide), per the brief.
 First Load JS ≈ 174 kB (phone + desktop modes); no images, no fonts, no
 network calls at runtime.
 
-PWA: web manifest + installable metadata + SVG icon. (A service worker for
-full offline caching is backlog.)
+PWA: web manifest + installable metadata + SVG icon + offline service
+worker (`public/sw.js`, production-only registration — `next dev` never
+caches). Bump `CACHE` in `sw.js` to ship a new offline generation.
 
 ## Scope guard
 

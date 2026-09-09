@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { useThemeSync } from "@/hooks/use-theme";
+import { useServiceWorker } from "@/hooks/use-service-worker";
 import { useSystemGestures } from "@/hooks/use-gestures";
 import { useDesktopLayout } from "@/hooks/use-desktop-layout";
 import { useShell } from "@/store/shell";
@@ -30,6 +31,7 @@ export function LauncherOS() {
   const viewportRef = useRef<HTMLDivElement>(null);
 
   useThemeSync();
+  useServiceWorker();
 
   useSystemGestures(viewportRef, ready && stage === "session" && !desktop, {
     onBottomSwipeUp: () => {

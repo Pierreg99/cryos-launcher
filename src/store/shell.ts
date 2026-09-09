@@ -15,7 +15,7 @@ import {
 } from "@/lib/apps";
 import type { WallpaperId } from "@/lib/wallpapers";
 import { DISTROS, type IceSlug } from "@/lib/crybel";
-import { TASKBAR_H, WIN_DEFAULTS } from "@/lib/desktop";
+import { TASKBAR_H, WIN_DEFAULTS, type SnapRect } from "@/lib/desktop";
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -101,6 +101,9 @@ export type ShellState = {
   windows: WinState[];
   winSeq: number;
   menuOpen: boolean;
+  cryCenterOpen: boolean;
+  /** live snap-preview rectangle while dragging a window to an edge */
+  snapPreview: SnapRect | null;
   /* persisted state */
   settings: Settings;
   grid: Grid;
@@ -140,6 +143,8 @@ export type ShellState = {
   winResize: (id: string, patch: Partial<Pick<WinState, "x" | "y" | "w" | "h">>) => void;
   winMinimizeAll: () => void;
   setMenu: (open: boolean) => void;
+  setCryCenter: (open: boolean) => void;
+  setSnapPreview: (rect: SnapRect | null) => void;
 };
 
 type PersistedShell = Pick<
@@ -315,6 +320,8 @@ export const useShell = create<ShellState>()(
       windows: [],
       winSeq: 0,
       menuOpen: false,
+      cryCenterOpen: false,
+      snapPreview: null,
       settings: DEFAULT_SETTINGS,
       grid: DEFAULT_GRID,
       dock: DEFAULT_DOCK,
@@ -342,6 +349,8 @@ export const useShell = create<ShellState>()(
           openApp: null,
           shadeOpen: false,
           folderOpen: null,
+          menuOpen: false,
+          cryCenterOpen: false,
         }),
 
       launchApp: (appId) => {
@@ -471,6 +480,10 @@ export const useShell = create<ShellState>()(
         set((s) => ({ windows: s.windows.map((w) => ({ ...w, min: true })) })),
 
       setMenu: (open) => set({ menuOpen: open }),
+
+      setCryCenter: (open) => set({ cryCenterOpen: open }),
+
+      setSnapPreview: (rect) => set({ snapPreview: rect }),
     }),
     {
       name: "crydroid-shell-v1",

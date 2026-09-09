@@ -42,7 +42,12 @@ export function DesktopTaskbar() {
   const airplane = useShell((s) => s.settings.airplane);
   const bootedAt = useShell((s) => s.bootedAt);
   const setSetting = useShell((s) => s.setSetting);
+  const cryCenterOpen = useShell((s) => s.cryCenterOpen);
+  const setCryCenter = useShell((s) => s.setCryCenter);
+  const dismissed = useShell((s) => s.dismissed);
   const viewportRef = useViewport();
+
+  const unread = d.notif.filter((n) => !dismissed.includes(n.id)).length;
 
   const vpSize = () => {
     const r = viewportRef.current?.getBoundingClientRect();
@@ -128,6 +133,22 @@ export function DesktopTaskbar() {
 
       {/* tray */}
       <div className="flex shrink-0 items-center gap-1.5 text-muted">
+        <button
+          type="button"
+          onClick={() => setCryCenter(!cryCenterOpen)}
+          aria-expanded={cryCenterOpen}
+          aria-label="CryCenter"
+          title="CryCenter"
+          className={cn(
+            "relative grid size-8 cursor-pointer place-items-center rounded-lg transition-colors hover:bg-surface-2",
+            cryCenterOpen && "bg-surface-2",
+          )}
+        >
+          <DistroMark slug={markSlugFor(ice)} className="size-4 text-primary" />
+          {unread > 0 && (
+            <span className="absolute right-1 top-1 size-1.5 rounded-full bg-primary" />
+          )}
+        </button>
         <button
           type="button"
           onClick={() => setSetting("theme", theme === "dark" ? "light" : "dark")}

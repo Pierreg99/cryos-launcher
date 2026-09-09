@@ -5,7 +5,15 @@
 import "./memory-storage";
 import { DEFAULT_DOCK, DEFAULT_GRID, GRID_SIZE, type AppId } from "@/lib/apps";
 import { DESKTOP_ICES, DISTROS, ICE_SLUGS, markSlugFor } from "@/lib/crybel";
-import { MIN_H, MIN_W, TASKBAR_H } from "@/lib/desktop";
+import {
+  MIN_H,
+  MIN_W,
+  SNAP_CORNER,
+  SNAP_EDGE,
+  TASKBAR_H,
+  snapGeometry,
+  snapZoneFor,
+} from "@/lib/desktop";
 import { useShell, type GridFolder } from "@/store/shell";
 import { dictFor } from "@/i18n";
 
@@ -325,6 +333,61 @@ const partialize2 = useShell.persist.getOptions().partialize;
 const partial2 = (partialize2 ? partialize2(s()) : {}) as Record<string, unknown>;
 check("windows not persisted", !("windows" in partial2));
 check("menu not persisted", !("menuOpen" in partial2));
+
+/* ---------------------------------------------------------------- */
+section("window snapping (pure geometry)");
+
+const VW = 1280;
+const VH = 800;
+const USABLE = VH - TASKBAR_H;
+check("center arms no snap", snapZoneFor(VW / 2, VH / 2, VW, VH) === null);
+check("left edge arms left", snapZoneFor(SNAP_EDGE - 4, VH / 2, VW, VH) === "left");
+check("right edge arms right", snapZoneFor(VW - SNAP_EDGE + 4, VH / 2, VW, VH) === "right");
+check("top edge arms top", snapZoneFor(VW / 2, SNAP_EDGE - 4, VW, VH) === "top");
+check("top-left corner arms nw", snapZoneFor(8, 8, VW, VH) === "nw");
+check("top-right corner arms ne", snapZoneFor(VW - 8, 8, VW, VH) === "ne");
+check("bottom-left corner arms sw", snapZoneFor(8, USABLE - 8, VW, VH) === "sw");
+check("bottom-right corner arms se", snapZoneFor(VW - 8, USABLE - 8, VW, VH) === "se");
+check("taskbar strip arms nothing", snapZoneFor(8, VH - 4, VW, VH) === null);
+check("corner beats edge", snapZoneFor(12, 40, VW, VH) === "nw");
+
+const left = snapGeometry("left", VW, VH);
+check("left half geometry", left.x === 0 && left.y === 0 && left.w === VW / 2 && left.h === USABLE);
+const right = snapGeometry("right", VW, VH);
+check("right half geometry", right.x === VW / 2 && right.w === VW - VW / 2 && right.h === USABLE);
+const top = snapGeometry("top", VW, VH);
+check("top geometry = full usable area", top.w === VW && top.h === USABLE);
+const se = snapGeometry("se", VW, VH);
+check("se quadrant geometry", se.x === VW / 2 && se.y === Math.round(USABLE / 2) && se.w === VW - VW / 2);
+const halves = [snapGeometry("left", VW, VH), snapGeometry("right", VW, VH)];
+check("halves tile the usable area", halves[0].w + halves[1].w === VW);
+const quads = ["nw", "ne", "sw", "se"].map((z) => snapGeometry(z as "nw", VW, VH));
+check("quadrants within usable area", quads.every((q) => q.y + q.h <= USABLE && q.x + q.w <= VW));
+
+/* ---------------------------------------------------------------- */
+section("CryCenter + snap preview state");
+
+check("cryCenter starts closed", s().cryCenterOpen === false);
+s().setCryCenter(true);
+check("cryCenter opens", s().cryCenterOpen === true);
+s().setMenu(true);
+s().lockNow();
+check("lock closes cryCenter", s().cryCenterOpen === false);
+check("lock closes app menu", s().menuOpen === false);
+check("lock returns to lock stage", s().stage === "lock");
+s().requestUnlock();
+
+const rect = { x: 1, y: 2, w: 300, h: 200 };
+s().setSnapPreview(rect);
+const preview = s().snapPreview;
+check("snap preview stored", preview !== null && preview.w === 300);
+s().setSnapPreview(null);
+check("snap preview cleared", s().snapPreview === null);
+
+const partialize3 = useShell.persist.getOptions().partialize;
+const partial3 = (partialize3 ? partialize3(s()) : {}) as Record<string, unknown>;
+check("cryCenter not persisted", !("cryCenterOpen" in partial3));
+check("snapPreview not persisted", !("snapPreview" in partial3));
 
 /* ---------------------------------------------------------------- */
 console.log(
