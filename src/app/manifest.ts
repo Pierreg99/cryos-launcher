@@ -9,14 +9,14 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "cryOS",
     description:
       "Fully virtualized cryOS preview. One law, many ices. Crydroid phone launcher simulation — boot, lock, home, gestures, shade, drawer.",
-    start_url: "/",
+    start_url: "./", // relative: works at domain root, GitHub Pages sub-path and inside Capacitor
     display: "standalone",
     orientation: "portrait",
     background_color: "#050b14",
     theme_color: "#050b14",
     icons: [
       {
-        src: "/icon.svg",
+        src: "./icon.svg",
         sizes: "any",
         type: "image/svg+xml",
         purpose: "any",
