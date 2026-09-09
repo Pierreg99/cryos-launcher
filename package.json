@@ -1,0 +1,31 @@
+{
+  "name": "crydroid-launcher",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CryDroid Launcher OS — fully virtualized cryOS phone launcher simulation. One law, many ices.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "smoke": "tsx scripts/smoke-store.ts"
+  },
+  "dependencies": {
+    "framer-motion": "12.43.0",
+    "lucide-react": "0.577.0",
+    "next": "15.5.25",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "zustand": "5.0.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "postcss": "^8.5.0",
+    "tailwindcss": "4.3.3",
+    "tsx": "^4.23.13",
+    "typescript": "5.9.3"
+  }
+}
