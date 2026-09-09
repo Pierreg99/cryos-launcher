@@ -171,9 +171,18 @@ PWA: web manifest + installable metadata + SVG icon + offline service
 worker (`public/sw.js`, production-only registration — `next dev` never
 caches). Bump `CACHE` in `sw.js` to ship a new offline generation.
 
+## Native app (Capacitor)
+
+`npm run build:app` exports the static build to `out/` and syncs the
+committed `android/` project (appId `os.cryos.crydroid`, name `cryOS`).
+Hardware/gesture back maps to the session back-chain, the native status
+bar follows the frost theme, branded adaptive icons + splashes are
+generated from the hex mark. Compiling the APK needs JDK 21 + Android SDK
+35 — full guide in [NATIVE.md](NATIVE.md).
+
 ## Scope guard
 
-Built after explicit go-ahead: CryLinux desktop mode (phase 2). Still out
-of scope: real backend/weather APIs, native Android wrapper
-(Capacitor/Cordova — mention only), multi-user/auth.
+Built after explicit go-ahead: CryLinux desktop mode (phase 2), snap +
+CryCenter + offline SW (phase 3), Capacitor native app project (phase 4).
+Still out of scope: real backend/weather APIs, multi-user/auth.
 See [BACKLOG.md](BACKLOG.md). No deployments or git pushes were made.

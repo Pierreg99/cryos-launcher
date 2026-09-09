@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
 
+// required for `output: "export"` (Capacitor/static hosting)
+export const dynamic = "force-static";
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "cryOS — Crydroid Launcher",

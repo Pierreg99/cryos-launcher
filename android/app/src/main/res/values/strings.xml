@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">cryOS</string>
+    <string name="title_activity_main">cryOS</string>
+    <string name="package_name">os.cryos.crydroid</string>
+    <string name="custom_url_scheme">os.cryos.crydroid</string>
+</resources>

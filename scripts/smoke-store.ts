@@ -16,6 +16,7 @@ import {
 } from "@/lib/desktop";
 import { useShell, type GridFolder } from "@/store/shell";
 import { dictFor } from "@/i18n";
+import { navigateBack } from "@/lib/navigation";
 
 let failures = 0;
 
@@ -388,6 +389,49 @@ const partialize3 = useShell.persist.getOptions().partialize;
 const partial3 = (partialize3 ? partialize3(s()) : {}) as Record<string, unknown>;
 check("cryCenter not persisted", !("cryCenterOpen" in partial3));
 check("snapPreview not persisted", !("snapPreview" in partial3));
+
+/* ---------------------------------------------------------------- */
+section("unified back chain (navigateBack)");
+
+s().lockNow();
+check("back on lock stage is unhandled", navigateBack() === false);
+s().requestUnlock();
+
+s().goHome();
+s().setMenu(false);
+s().setCryCenter(false);
+for (const w of [...s().windows]) s().winClose(w.id); // clean slate from earlier sections
+check("back on empty home is unhandled", navigateBack() === false);
+
+s().launchApp("files");
+check("back closes open app", navigateBack() === true && s().openApp === null);
+s().launchApp("files");
+s().showRecents();
+check("back hides recents first", navigateBack() === true && s().overlay === "none" && s().openApp === "files");
+check("back then closes app", navigateBack() === true && s().openApp === null);
+s().openDrawer();
+check("back closes drawer", navigateBack() === true && s().overlay === "none");
+s().setShade(true);
+check("back closes shade", navigateBack() === true && s().shadeOpen === false);
+s().setMenu(true);
+check("back closes app menu", navigateBack() === true && s().menuOpen === false);
+s().setCryCenter(true);
+check("back closes cryCenter", navigateBack() === true && s().cryCenterOpen === false);
+
+s().winOpen("terminal", { w: 1280, h: 800 });
+s().winOpen("notes", { w: 1280, h: 800 });
+const topBefore = s().windows.reduce((a, w) => (w.z > a.z ? w : a)).id;
+check("back closes front-most window", navigateBack() === true && s().windows.every((w) => w.id !== topBefore));
+const lastId = s().windows[0].id;
+check("back closes next window", navigateBack() === true && s().windows.length === 0);
+check("back with no windows unhandled", navigateBack() === false);
+void lastId;
+
+// minimized windows are not back targets
+s().winOpen("clock", { w: 1280, h: 800 });
+s().winMinimizeAll();
+check("back skips minimized windows", navigateBack() === false);
+s().winClose(s().windows[0].id);
 
 /* ---------------------------------------------------------------- */
 console.log(

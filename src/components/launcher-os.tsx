@@ -7,6 +7,8 @@ import { useThemeSync } from "@/hooks/use-theme";
 import { useServiceWorker } from "@/hooks/use-service-worker";
 import { useSystemGestures } from "@/hooks/use-gestures";
 import { useDesktopLayout } from "@/hooks/use-desktop-layout";
+import { useNativeChrome } from "@/hooks/use-native";
+import { navigateBack } from "@/lib/navigation";
 import { useShell } from "@/store/shell";
 import { DISTROS } from "@/lib/crybel";
 import type { CSSVars } from "@/lib/utils";
@@ -32,6 +34,7 @@ export function LauncherOS() {
 
   useThemeSync();
   useServiceWorker();
+  useNativeChrome();
 
   useSystemGestures(viewportRef, ready && stage === "session" && !desktop, {
     onBottomSwipeUp: () => {
@@ -49,12 +52,7 @@ export function LauncherOS() {
       useShell.getState().goHome();
     },
     onEdgeBack: () => {
-      const s = useShell.getState();
-      if (s.folderOpen) return s.closeFolder();
-      if (s.shadeOpen) return s.setShade(false);
-      if (s.overlay === "drawer") return s.closeDrawer();
-      if (s.overlay === "recents") return s.hideRecents();
-      if (s.openApp) return s.goHome();
+      navigateBack();
     },
     onTopSwipeDown: () => {
       useShell.getState().setShade(true);

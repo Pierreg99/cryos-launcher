@@ -3,7 +3,7 @@
 Ideas noted during the build that exceed the current module scope
 (per the stop rules: noted, not implemented).
 
-## Done in phase 2 + 3 (after explicit go-ahead)
+## Done in phases 2-4 (after explicit go-ahead)
 
 - [x] **CryLinux desktop mode** — second virtual device mode: taskbar/dock,
       window manager (drag / 8-way resize / min / max / close / focus),
