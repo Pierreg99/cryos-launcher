@@ -1,3 +1,60 @@
+<div align="center">
+
+<img src="./assets/readme-banner.svg" alt="cryos-launcher" width="100%">
+
+# cryos-launcher
+
+cryOS — CryDroid Launcher OS: fully virtualized phone launcher + CryLinux desktop simulation. One law, many ices.
+
+[![branch](https://img.shields.io/badge/branch-main-7EB8C9?style=flat-square)](https://github.com/Pierreg99/cryos-launcher)
+[![sichtbarkeit](https://img.shields.io/badge/sichtbarkeit-öffentlich-141414?style=flat-square&labelColor=0A0A0A)](https://github.com/Pierreg99/cryos-launcher)
+[![sprache](https://img.shields.io/badge/sprache-TypeScript-2A2A28?style=flat-square&labelColor=0A0A0A)](https://github.com/Pierreg99/cryos-launcher)
+
+</div>
+
+<table>
+<tr>
+<td width="58%" valign="top">
+
+### Bestand
+
+cryOS — CryDroid Launcher OS: fully virtualized phone launcher + CryLinux desktop simulation. One law, many ices.
+
+Der Default-Branch `main` ist die Fläche, die zählt. Was nicht in diesem Baum liegt, ist kein Feature dieses Repos.
+
+</td>
+<td width="42%" valign="top">
+
+### Fakten
+
+| Feld | Wert |
+| --- | --- |
+| Owner | Pierreg99 |
+| Branch | `main` |
+| Sichtbarkeit | öffentlich |
+| Sprache | TypeScript |
+| Archiv | nein |
+
+</td>
+</tr>
+</table>
+
+## Lesen
+
+1. Default-Branch öffnen.
+2. Nur Dateien in diesem Baum als Beleg nehmen.
+3. Issues und Diskussionen nur nutzen, wenn sie im Repo eingeschaltet sind.
+
+## Grenze
+
+Keine Qualitätszahl, kein Paketstand und keine Runtime, die nicht als Datei in diesem Repo steht.
+
+<p align="center"><sub>Fläche nach Cryo Core Lite v1.5 · Tokens #0A0A0A / #141414 / #7EB8C9</sub></p>
+
+
+<details>
+<summary>Bisheriger README-Text</summary>
+
 # CryDroid Launcher OS
 
 **One law, many ices.** A fully virtualized, browser-based phone launcher
@@ -157,47 +214,8 @@ src/
                   use-desktop-layout, use-service-worker
   lib/            apps, live, wallpapers, doctrine, crybel, desktop
                   (incl. snap geometry), utils
-  store/          shell.ts (stage machine + persisted launcher state)
-  i18n.ts         EN/DE dictionary (useDict)
-scripts/          smoke-store.ts (headless logic tests)
-```
+  store/          shell.ts (stag
 
-## Stack
+… gekürzt, Original bleibt in der Git-Historie.
 
-Next.js 15 (App Router, static prerender) · React 19 · TypeScript strict ·
-Tailwind CSS 4 · Framer Motion 12 · Zustand 5 · lucide-react.
-Exactly three UI libraries (Tailwind, Framer Motion, Lucide), per the brief.
-First Load JS ≈ 174 kB (phone + desktop modes); no images, no fonts, no
-network calls at runtime.
-
-PWA: web manifest + installable metadata + SVG icon + offline service
-worker (`public/sw.js`, production-only registration — `next dev` never
-caches). Bump `CACHE` in `sw.js` to ship a new offline generation.
-
-## Deploy (GitHub Pages)
-
-```bash
-npm run build:pages   # static export with basePath /cryos-launcher + .nojekyll
-```
-
-then push `out/` to the `gh-pages` branch (orphan branch, force-push).
-The service worker derives its cache base from the registration scope, so
-the same `sw.js` works at a domain root and under the Pages sub-path.
-`npm run build` (server mode) and `npm run build:app` (Capacitor, no
-basePath) stay independent. Roadmap: [EXPANSION.md](EXPANSION.md).
-
-## Native app (Capacitor)
-
-`npm run build:app` exports the static build to `out/` and syncs the
-committed `android/` project (appId `os.cryos.crydroid`, name `cryOS`).
-Hardware/gesture back maps to the session back-chain, the native status
-bar follows the frost theme, branded adaptive icons + splashes are
-generated from the hex mark. Compiling the APK needs JDK 21 + Android SDK
-35 — full guide in [NATIVE.md](NATIVE.md).
-
-## Scope guard
-
-Built after explicit go-ahead: CryLinux desktop mode (phase 2), snap +
-CryCenter + offline SW (phase 3), Capacitor native app project (phase 4).
-Still out of scope: real backend/weather APIs, multi-user/auth.
-See [BACKLOG.md](BACKLOG.md). No deployments or git pushes were made.
+</details>
