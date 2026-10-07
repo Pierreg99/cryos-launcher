@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./assets/readme-banner.svg" alt="cryos-launcher" width="100%">
+
 # CryDroid Launcher OS
 
 <p><strong>cryOS CryDroid Launcher: virtualisierter Smartphone-Launcher und CryLinux-Desktop-Simulation.</strong></p>
@@ -12,10 +14,38 @@
 <p><a href="#schnellstart">Schnellstart</a> · <a href="#projektstruktur">Projektstruktur</a> · <a href="#english-summary">English</a></p>
 </div>
 
+<table>
+<tr>
+<td width="58%" valign="top">
+
+### Bestand
+
+cryOS — CryDroid Launcher OS: fully virtualized phone launcher + CryLinux desktop simulation. One law, many ices.
+
+Der Default-Branch `main` ist die Fläche, die zählt. Was nicht in diesem Baum liegt, ist kein Feature dieses Repos.
+
+</td>
+<td width="42%" valign="top">
+
+### Fakten
+
+| Feld | Wert |
+| --- | --- |
+| Owner | Pierreg99 |
+| Branch | `main` |
+| Sichtbarkeit | öffentlich |
+| Sprache | TypeScript |
+| Archiv | nein |
+
+</td>
+</tr>
+</table>
+
 ---
 
 ## Inhaltsverzeichnis
 
+- [Bestand und Fakten](#bestand)
 - [Überblick](#überblick)
 - [Features](#features)
 - [Schnellstart](#schnellstart)
@@ -32,7 +62,7 @@ cryOS CryDroid Launcher: virtualisierter Smartphone-Launcher und CryLinux-Deskto
 | Merkmal | Wert |
 | --- | --- |
 | Sprachen | TypeScript (95%), CSS (4%), JavaScript (1%) |
-| Dateien im Repository | 160 |
+| Dateien im Repository | 161 |
 | Einstiegspunkte | `src/app/page.tsx`, `src/app/layout.tsx` |
 | Version (`package.json`) | 0.1.0 |
 
@@ -94,7 +124,7 @@ flowchart LR
     R(["cryos-launcher"])
     R --> D0["android/<br/>77 Dateien"]
     R --> D1["src/<br/>62 Dateien"]
-    R --> D2["assets/<br/>5 Dateien"]
+    R --> D2["assets/<br/>6 Dateien"]
     R --> D3["public/<br/>2 Dateien"]
     R --> D4["scripts/<br/>2 Dateien"]
     E{{"Einstieg: src/app/page.tsx"}}
@@ -113,10 +143,11 @@ cryos-launcher/
 │   ├── capacitor.settings.gradle
 │   ├── gradle.properties
 │   └── … (4 weitere)
-├── assets/  (5 Dateien)
+├── assets/  (6 Dateien)
 │   ├── icon-background.png
 │   ├── icon-foreground.png
 │   ├── icon-only.png
+│   ├── readme-banner.svg
 │   ├── splash-dark.png
 │   └── splash.png
 ├── public/  (2 Dateien)
