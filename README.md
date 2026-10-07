@@ -2,14 +2,16 @@
 
 <img src="./assets/readme-banner.svg" alt="cryos-launcher" width="100%">
 
-# cryos-launcher
+# CryDroid Launcher OS
 
-cryOS — CryDroid Launcher OS: fully virtualized phone launcher + CryLinux desktop simulation. One law, many ices.
-
-[![branch](https://img.shields.io/badge/branch-main-7EB8C9?style=flat-square)](https://github.com/Pierreg99/cryos-launcher)
-[![sichtbarkeit](https://img.shields.io/badge/sichtbarkeit-öffentlich-141414?style=flat-square&labelColor=0A0A0A)](https://github.com/Pierreg99/cryos-launcher)
-[![sprache](https://img.shields.io/badge/sprache-TypeScript-2A2A28?style=flat-square&labelColor=0A0A0A)](https://github.com/Pierreg99/cryos-launcher)
-
+<p><strong>cryOS CryDroid Launcher: virtualisierter Smartphone-Launcher und CryLinux-Desktop-Simulation.</strong></p>
+<p>
+<img alt="TypeScript: 95%" src="https://img.shields.io/badge/TypeScript-95%25-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+<img alt="CSS: 4%" src="https://img.shields.io/badge/CSS-4%25-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+<img alt="JavaScript: 1%" src="https://img.shields.io/badge/JavaScript-1%25-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white">
+<img alt="Sichtbarkeit: Öffentlich" src="https://img.shields.io/badge/Sichtbarkeit-%C3%96ffentlich-0B7285?style=for-the-badge">
+</p>
+<p><a href="#schnellstart">Schnellstart</a> · <a href="#projektstruktur">Projektstruktur</a> · <a href="#english-summary">English</a></p>
 </div>
 
 <table>
@@ -39,26 +41,154 @@ Der Default-Branch `main` ist die Fläche, die zählt. Was nicht in diesem Baum 
 </tr>
 </table>
 
-## Lesen
+---
 
-1. Default-Branch öffnen.
-2. Nur Dateien in diesem Baum als Beleg nehmen.
-3. Issues und Diskussionen nur nutzen, wenn sie im Repo eingeschaltet sind.
+## Inhaltsverzeichnis
 
-## Grenze
+- [Bestand und Fakten](#bestand)
+- [Überblick](#überblick)
+- [Features](#features)
+- [Schnellstart](#schnellstart)
+- [Architektur](#architektur)
+- [Projektstruktur](#projektstruktur)
+- [Dokumentation](#dokumentation)
+- [Projektdetails](#projektdetails)
+- [English summary](#english-summary)
 
-Keine Qualitätszahl, kein Paketstand und keine Runtime, die nicht als Datei in diesem Repo steht.
+## Überblick
 
-<p align="center"><sub>Fläche nach Cryo Core Lite v1.5 · Tokens #0A0A0A / #141414 / #7EB8C9</sub></p>
+cryOS CryDroid Launcher: virtualisierter Smartphone-Launcher und CryLinux-Desktop-Simulation.
 
+| Merkmal | Wert |
+| --- | --- |
+| Sprachen | TypeScript (95%), CSS (4%), JavaScript (1%) |
+| Dateien im Repository | 161 |
+| Einstiegspunkte | `src/app/page.tsx`, `src/app/layout.tsx` |
+| Version (`package.json`) | 0.1.0 |
+
+## Features
+
+- Next.js-Anwendung
+- Native Android-/iOS-Hülle über Capacitor
+- Styling mit Tailwind CSS
+- State-Management mit Zustand
+- Animationen mit Framer Motion
+- Typprüfung mit TypeScript
+- Lokale Speicherung im Browser (localStorage)
+- Touch- und Pointer-Steuerung
+- Service-Worker-Registrierung für Offline-Betrieb
+- Echtzeit-Render-Schleife (requestAnimationFrame)
+- 1 Testdatei im Repository
+- Android-Build mit Gradle
+
+## Schnellstart
+
+```bash
+git clone https://github.com/Pierreg99/cryos-launcher.git
+cd cryos-launcher
+```
+
+**Node.js**
+
+```bash
+npm install
+npm run dev
+npm start
+npm run build
+npm run typecheck
+```
 
 <details>
-<summary>Bisheriger README-Text</summary>
+<summary>Alle Skripte aus <code>package.json</code></summary>
 
-# CryDroid Launcher OS
+| Skript | Befehl |
+| --- | --- |
+| `dev` | `next dev` |
+| `build` | `next build` |
+| `start` | `next start` |
+| `typecheck` | `tsc --noEmit` |
+| `smoke` | `tsx scripts/smoke-store.ts` |
+| `build:static` | `cross-env NEXT_STATIC_EXPORT=1 next build` |
+| `build:app` | `npm run build:static && cap sync android` |
+| `open:android` | `cap open android` |
+| `build:pages` | `cross-env NEXT_STATIC_EXPORT=1 NEXT_BASE_PATH=/cryos-launcher next build && node -e "re...` |
+
+</details>
+
+## Architektur
+
+Übersicht der wichtigsten Verzeichnisse nach Anzahl der enthaltenen Dateien.
+
+```mermaid
+flowchart LR
+    R(["cryos-launcher"])
+    R --> D0["android/<br/>77 Dateien"]
+    R --> D1["src/<br/>62 Dateien"]
+    R --> D2["assets/<br/>6 Dateien"]
+    R --> D3["public/<br/>2 Dateien"]
+    R --> D4["scripts/<br/>2 Dateien"]
+    E{{"Einstieg: src/app/page.tsx"}}
+    E -.-> R
+```
+
+## Projektstruktur
+
+```text
+cryos-launcher/
+├── android/  (77 Dateien)
+│   ├── app/
+│   ├── gradle/
+│   ├── .gitignore
+│   ├── build.gradle
+│   ├── capacitor.settings.gradle
+│   ├── gradle.properties
+│   └── … (4 weitere)
+├── assets/  (6 Dateien)
+│   ├── icon-background.png
+│   ├── icon-foreground.png
+│   ├── icon-only.png
+│   ├── readme-banner.svg
+│   ├── splash-dark.png
+│   └── splash.png
+├── public/  (2 Dateien)
+│   ├── icon.svg
+│   └── sw.js
+├── scripts/  (2 Dateien)
+│   ├── memory-storage.ts
+│   └── smoke-store.ts
+├── src/  (62 Dateien)
+│   ├── app/
+│   ├── components/
+│   ├── hooks/
+│   ├── lib/
+│   ├── store/
+│   └── i18n.ts
+├── .gitignore
+├── BACKLOG.md
+├── capacitor.config.ts
+├── EXPANSION.md
+├── NATIVE.md
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── README.md
+└── tsconfig.json
+```
+
+## Dokumentation
+
+- [BACKLOG.md](BACKLOG.md)
+- [EXPANSION.md](EXPANSION.md)
+- [NATIVE.md](NATIVE.md)
+
+## Projektdetails
+
+Der folgende Abschnitt übernimmt die bisherige Projektdokumentation.
 
 **One law, many ices.** A fully virtualized, browser-based phone launcher
-simulation in the spirit of [`Pierreg99/cryOS`](https://github.com/Pierreg99/cryOS) —
+simulation in the spirit of the cryOS concept —
 not a website with a dock sticker, a session.
 
 Boot → Lock → Home, with gesture navigation, a notification shade, an app
@@ -214,8 +344,53 @@ src/
                   use-desktop-layout, use-service-worker
   lib/            apps, live, wallpapers, doctrine, crybel, desktop
                   (incl. snap geometry), utils
-  store/          shell.ts (stag
+  store/          shell.ts (stage machine + persisted launcher state)
+  i18n.ts         EN/DE dictionary (useDict)
+scripts/          smoke-store.ts (headless logic tests)
+```
 
-… gekürzt, Original bleibt in der Git-Historie.
+## Stack
 
-</details>
+Next.js 15 (App Router, static prerender) · React 19 · TypeScript strict ·
+Tailwind CSS 4 · Framer Motion 12 · Zustand 5 · lucide-react.
+Exactly three UI libraries (Tailwind, Framer Motion, Lucide), per the brief.
+First Load JS ≈ 174 kB (phone + desktop modes); no images, no fonts, no
+network calls at runtime.
+
+PWA: web manifest + installable metadata + SVG icon + offline service
+worker (`public/sw.js`, production-only registration — `next dev` never
+caches). Bump `CACHE` in `sw.js` to ship a new offline generation.
+
+## Deploy (GitHub Pages)
+
+```bash
+npm run build:pages   # static export with basePath /cryos-launcher + .nojekyll
+```
+
+then push `out/` to the `gh-pages` branch (orphan branch, force-push).
+The service worker derives its cache base from the registration scope, so
+the same `sw.js` works at a domain root and under the Pages sub-path.
+`npm run build` (server mode) and `npm run build:app` (Capacitor, no
+basePath) stay independent. Roadmap: [EXPANSION.md](EXPANSION.md).
+
+## Native app (Capacitor)
+
+`npm run build:app` exports the static build to `out/` and syncs the
+committed `android/` project (appId `os.cryos.crydroid`, name `cryOS`).
+Hardware/gesture back maps to the session back-chain, the native status
+bar follows the frost theme, branded adaptive icons + splashes are
+generated from the hex mark. Compiling the APK needs JDK 21 + Android SDK
+35 — full guide in [NATIVE.md](NATIVE.md).
+
+## Scope guard
+
+Built after explicit go-ahead: CryLinux desktop mode (phase 2), snap +
+CryCenter + offline SW (phase 3), Capacitor native app project (phase 4).
+Still out of scope: real backend/weather APIs, multi-user/auth.
+See [BACKLOG.md](BACKLOG.md). No deployments or git pushes were made.
+
+## English summary
+
+cryOS CryDroid Launcher: virtualized phone launcher and CryLinux desktop simulation.
+
+Clone the repository and follow the commands in [Schnellstart](#schnellstart); the [project layout](#projektstruktur) shows where the code lives. Further documents are listed under [Dokumentation](#dokumentation).
